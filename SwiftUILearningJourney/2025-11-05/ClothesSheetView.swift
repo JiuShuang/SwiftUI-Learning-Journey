@@ -22,8 +22,11 @@ struct BlurView: UIViewRepresentable {
 struct ClothesSheetView: View {
     
     @Binding var showingSheet:Bool
-    @State var number:Int=1
     var clothesProduct:ClothesProduct
+    
+    @State private var number:Int=1
+    @State private var selectedSize:Int=0
+    @State private var selectedColor:Int=0
     
     var body: some View {
         ZStack(alignment:.bottom){
@@ -48,7 +51,7 @@ struct ClothesSheetView: View {
                                 Text(variation)
                                     .padding(5)
                                     .background(
-                                        RoundedRectangle(cornerRadius: 10)
+                                        RoundedRectangle(cornerRadius: 5)
                                             .fill(Color(hex:"E5EBFC"))
                                     )
                             }
@@ -59,28 +62,47 @@ struct ClothesSheetView: View {
                     .fontWeight(.heavy)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 16) {
-                        ForEach(clothesProduct.colorOptions, id: \.self) { colorOption in
-                            Image(colorOption)
-                                .resizable()
-                                .scaledToFill()
-                                .cornerRadius(12)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .frame(width: 100, height: 100)
-                                .clipped()
+                        ForEach(clothesProduct.colorOptions.indices, id: \.self) { index in
+                            let colorOption = clothesProduct.colorOptions[index]
+                            ZStack(alignment:.bottomLeading){
+                                Image(colorOption)
+                                    .resizable()
+                                    .cornerRadius(12)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .frame(width: 100, height: 100)
+                                    .clipped()
+                                if(selectedColor==index){
+                                    Circle()
+                                        .fill(Color(hex:"004CFF"))
+                                        .stroke(Color.white,lineWidth: 2)
+                                        .overlay(
+                                            Image(systemName:"checkmark")
+                                                .foregroundColor(.white)
+                                        )
+                                        .frame(width:25)
+                                        .padding(5)
+                                }
+                            }.onTapGesture {
+                                selectedColor=index
+                            }
                         }
                     }
                 }
                 Text("Size")
                     .fontWeight(.heavy)
                 HStack{
-                    ForEach(clothesProduct.size,id: \.self){ clothesSize in
+                    ForEach(clothesProduct.size.indices,id: \.self){ index in
+                        let clothesSize=clothesProduct.size[index]
                         Text(clothesSize)
                             .padding(5)
                             .frame(width:55)
                             .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color(hex:"E5EBFC"))
-                            )
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(selectedSize==index ? Color(hex:"004CFF") : Color.white)
+                                    .fill(selectedSize==index ? Color(hex:"E5EBFC") : Color(hex:"F9F9F9") )
+                            ).onTapGesture {
+                                selectedSize=index
+                            }
                     }
                 }
                 HStack{
