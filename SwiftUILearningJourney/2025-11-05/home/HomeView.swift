@@ -12,6 +12,11 @@ struct HomeView: View {
     
     @State private var selectedTabIndex:Int=0;
     
+    init() {
+            UITabBar.appearance().backgroundColor = .white
+            UITabBar.appearance().shadowImage = UIImage()
+            UITabBar.appearance().backgroundImage = UIImage()
+        }
     
     var body: some View {
         TabView(selection:$selectedTabIndex){
