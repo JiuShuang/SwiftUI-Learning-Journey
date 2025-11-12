@@ -1,13 +1,52 @@
 //
-//  CartView.swift
+//  PayView.swift
 //  SwiftUILearningJourney
 //
-//  Created by Mac on 2025/11/10.
-// UI:https://www.figma.com/community/file/1321464360558173342/shoppe-ecommerce-clothing-fashion-store-multi-purpose-ui-mobile-app-design
+//  Created by Mac on 2025/11/12.
+//
 
 import SwiftUI
 
-struct CartView: View {
+struct ShippingOptionsView: View {
+    var optionId:Int
+    var optionType:String
+    var optionTime:String
+    var optionPrice:String
+    @Binding var selectedOption:Int
+    var body: some View {
+        HStack{
+            Image(systemName: "checkmark")
+                .foregroundColor(optionId==selectedOption ? .white:.clear)
+                .padding(5)
+                .background(
+                    Circle().fill(optionId==selectedOption ? Color(.primary):Color(hex: "EFEFEF"))
+                )
+            Text(optionType)
+                .frame(width: 80)
+                .bold()
+            Text(optionTime)
+                .foregroundColor(Color(.primary))
+                .padding(8)
+                .background(
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(Color(hex: "F5F8FF"))
+                )
+            Spacer()
+            Text(optionPrice)
+                .fontWeight(.heavy)
+        }
+            .padding(8)
+            .background(RoundedRectangle(cornerRadius: 10).fill(Color(hex: optionId==selectedOption ? "E5EBFC" : "F9F9F9")))
+            .onTapGesture {
+                selectedOption=optionId
+            }
+    }
+}
+
+struct PayView: View {
+    
+    @State private var selectedOption:Int = 0
+    
     var body: some View {
         NavigationStack{
             VStack{
@@ -122,48 +161,8 @@ struct CartView: View {
                         Text("Shipping Options")
                             .font(.title)
                             .bold()
-                        HStack{
-                            Image(systemName: "checkmark")
-                                .foregroundColor(.white)
-                                .padding(5)
-                                .background(
-                                    Circle().fill(Color(.primary))
-                                )
-                            Text("Standard").bold()
-                            Text("5-7 days")
-                                .foregroundColor(Color(.primary))
-                                .padding(8)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 5)
-                                        .fill(Color(hex: "F5F8FF"))
-                                )
-                            Spacer()
-                            Text("FREE")
-                                .fontWeight(.heavy)
-                        }
-                            .padding(8)
-                            .background(RoundedRectangle(cornerRadius: 10).fill(Color(hex: "E5EBFC")))
-                        HStack{
-                            Image(systemName: "checkmark")
-                                .foregroundColor(.white)
-                                .padding(5)
-                                .background(
-                                    Circle().fill(Color(.primary))
-                                )
-                            Text("Express").bold()
-                            Text("1-2 days")
-                                .foregroundColor(Color(.primary))
-                                .padding(8)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 5)
-                                        .fill(Color(hex: "F5F8FF"))
-                                )
-                            Spacer()
-                            Text("$12.00")
-                                .fontWeight(.heavy)
-                        }
-                            .padding(8)
-                            .background(RoundedRectangle(cornerRadius: 10).fill(Color(hex:"F9F9F9")))
+                        ShippingOptionsView(optionId: 0, optionType: "Standard", optionTime: "5-7 days",optionPrice: "Free",selectedOption: $selectedOption)
+                        ShippingOptionsView(optionId: 1, optionType: "Express", optionTime: "1-2 days", optionPrice: "$12.00",selectedOption: $selectedOption)
                         Text("Payment Method")
                             .font(.title)
                             .bold()
@@ -205,6 +204,6 @@ struct CartView: View {
     }
 }
 
-#Preview {
-    CartView()
+#Preview{
+    PayView()
 }
