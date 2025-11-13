@@ -189,7 +189,7 @@ struct ClothesProductView: View {
                                     .foregroundColor(Color(hex: "004CFF"))
                                     .background(Color(hex:"F5F8FF"))
                                 Spacer()
-                                Text("$3,00")
+                                Text(String(format: "%.2f", delivery.price))
                                     .fontWeight(.heavy)
                             }
                             .padding()

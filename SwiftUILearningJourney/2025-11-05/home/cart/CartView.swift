@@ -124,74 +124,73 @@ struct ClothesFromWishList: View {
 
 struct CartView : View {
     var body: some View {
-        VStack{
-            ScrollView(.vertical){
-                VStack(alignment:.leading){
-                    HStack{
-                        Text("Cart")
-                            .bold()
-                            .font(.title)
-                        Text("2")
-                            .bold()
-                            .font(.title2)
-                            .padding()
-                            .background(
-                                Circle()
-                                    .fill(Color(.second))
-                            )
-                    }
+        NavigationStack{
+            VStack{
+                ScrollView(.vertical){
                     VStack(alignment:.leading){
-                        Text("Shipping Address")
-                            .font(.title3)
-                            .bold()
                         HStack{
-                            Text("26, Duong So 2, Thao Dien Ward, An Phu, District 2, Ho Chi Minh city")
-                                .font(.caption)
-                            Spacer()
-                            Image(systemName: "pencil")
-                                .font(.title3)
-                                .foregroundColor(.white)
-                                .padding(8)
+                            Text("Cart")
+                                .bold()
+                                .font(.title)
+                            Text("2")
+                                .bold()
+                                .font(.title2)
+                                .padding()
                                 .background(
-                                    Circle().fill(Color(.primary))
+                                    Circle()
+                                        .fill(Color(.second))
                                 )
                         }
+                        VStack(alignment:.leading){
+                            Text("Shipping Address")
+                                .font(.title3)
+                                .bold()
+                            HStack{
+                                Text("26, Duong So 2, Thao Dien Ward, An Phu, District 2, Ho Chi Minh city")
+                                    .font(.caption)
+                                Spacer()
+                                Image(systemName: "pencil")
+                                    .font(.title3)
+                                    .foregroundColor(.white)
+                                    .padding(8)
+                                    .background(
+                                        Circle().fill(Color(.primary))
+                                    )
+                            }
+                        }
+                        .padding(15)
+                        .background(RoundedRectangle(cornerRadius: 10).fill(Color(hex:"F9F9F9")))
+                        ClothesInCart()
+                        ClothesInCart()
+                        Text("From Your Wishlist")
+                            .font(.title)
+                            .bold()
+                        ClothesFromWishList()
+                        ClothesFromWishList()
+                        ClothesFromWishList()
                     }
-                    .padding(15)
-                    .background(RoundedRectangle(cornerRadius: 10).fill(Color(hex:"F9F9F9")))
-                    ClothesInCart()
-                    ClothesInCart()
-                    Text("From Your Wishlist")
-                        .font(.title)
-                        .bold()
-                    ClothesFromWishList()
-                    ClothesFromWishList()
-                    ClothesFromWishList()
-                }
-                .padding(.horizontal,10)
-            }.scrollIndicators(.hidden)
-            HStack{
-                Text("Total")
-                    .fontWeight(.heavy)
-                Text("$34.00")
-                Spacer()
-                Button(
-                    action: {
-                        
-                    },
-                    label: {
-                        Text("Pay")
+                    .padding(.horizontal,10)
+                }.scrollIndicators(.hidden)
+                HStack{
+                    Text("Total")
+                        .fontWeight(.heavy)
+                    Text("$34.00")
+                    Spacer()
+                    NavigationLink {
+                        PayView()
+                    } label: {
+                        Text("Checkout")
                             .foregroundColor(.white)
+                            .padding(.horizontal, 40)
+                            .padding(.vertical, 10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color(.primary))
+                            )
                     }
-                )
-                .padding(.horizontal,40)
-                .padding(.vertical,10)
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.black)
-                )
-            }
-        }.padding(.horizontal,10)
+                }
+            }.padding(.horizontal,10)
+        }
     }
 }
 #Preview {
