@@ -106,7 +106,7 @@ struct VoucherCard : View {
 
 struct AddVoucherView : View {
     @Binding var selectedVoucher:VoucherModel?
-    @Binding var addVoucher: Bool
+    @Binding var showVoucher: Bool
     var voucherList:Array<VoucherModel>=[
         VoucherModel(id: 1, date: "Valid Until 5.16.20", title: "First Purchase", desc: "5% off for your next order",discount:"5%"),
         VoucherModel(id: 2, date: "Valid Until 6.20.20", title: "Gift From Customer Care", desc: "15% off your next purchase",discount:"15%")
@@ -125,7 +125,7 @@ struct AddVoucherView : View {
                     VoucherCard(
                         voucherModel: voucher,
                         onTap: {
-                            addVoucher=false
+                            showVoucher=false
                             selectedVoucher=voucher;
                         }
                     )

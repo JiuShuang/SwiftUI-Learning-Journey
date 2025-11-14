@@ -85,148 +85,181 @@ struct itemView:View {
 struct PayView: View {
     
     @State private var selectedOption:Int = 0
-    @State private var addVoucher:Bool = false
+    @State private var showVoucherSheet:Bool = false
+    @State private var showAddressSheet:Bool = false
+    @State private var showContactInfoSheet:Bool = false
+    @State private var isPlaying:Bool = false
+    @State private var payStatus:PayStatus = PayStatus.loading
     @State var selectedVoucher:VoucherModel?
     
     var body: some View {
         NavigationStack{
-            VStack{
-                ScrollView{
-                    VStack(alignment:.leading){
-                        Text("Payment")
-                            .font(.title)
-                            .bold()
+            ZStack{
+                VStack{
+                    ScrollView{
                         VStack(alignment:.leading){
-                            Text("Shipping Address")
-                                .font(.title3)
-                                .bold()
-                            HStack{
-                                Text("26, Duong So 2, Thao Dien Ward, An Phu, District 2, Ho Chi Minh city")
-                                    .font(.caption)
-                                Spacer()
-                                Image(systemName: "pencil")
-                                    .font(.title3)
-                                    .foregroundColor(.white)
-                                    .padding(8)
-                                    .background(
-                                        Circle().fill(Color(.primary))
-                                    )
-                            }
-                        }
-                        .padding(15)
-                        .background(RoundedRectangle(cornerRadius: 10).fill(Color(hex:"F9F9F9")))
-                        VStack(alignment:.leading){
-                            Text("Contact Information")
-                                .font(.title3)
-                                .bold()
-                            HStack{
-                                Text("+84932000000\namandamorgan@example.com")
-                                    .font(.caption)
-                                Spacer()
-                                Image(systemName: "pencil")
-                                    .font(.title3)
-                                    .foregroundColor(.white)
-                                    .padding(8)
-                                    .background(
-                                        Circle().fill(Color(.primary))
-                                    )
-                            }
-                        }
-                        .padding(15)
-                        .background(RoundedRectangle(cornerRadius: 10).fill(Color(hex:"F9F9F9")))
-                        HStack{
-                            Text("Items")
+                            Text("Payment")
                                 .font(.title)
                                 .bold()
-                            Text("2")
-                                .font(.title2)
-                                .bold()
-                                .padding(10)
-                                .background(Circle().fill(Color(hex:"E5EBFC")))
-                            Spacer()
-                            selectedVoucher==nil
-                            ?AnyView(
-                                Button(
-                                    action:{
-                                        addVoucher=true
-                                    },
-                                    label:{
-                                        Text("Add Voucher")
-                                            .foregroundColor(Color(.primary))
-                                            .font(.callout)
-                                            .padding(.horizontal,10)
-                                            .padding(.vertical,5)
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .fill(.white)
-                                                    .stroke(Color(.primary))
-                                            )
-                                    }
-                                ).sheet(isPresented: $addVoucher, content: {
-                                    AddVoucherView(
-                                        selectedVoucher: $selectedVoucher,
-                                        addVoucher: $addVoucher
-                                    ).presentationDetents([.medium])
-                                })
-                            )
-                            :AnyView(
+                            VStack(alignment:.leading){
+                                Text("Shipping Address")
+                                    .font(.title3)
+                                    .bold()
                                 HStack{
-                                    Text("\(selectedVoucher!.discount) Discount")
-                                    Image(systemName: "xmark")
-                                        .onTapGesture {
-                                            selectedVoucher=nil
+                                    Text("26, Duong So 2, Thao Dien Ward, An Phu, District 2, Ho Chi Minh city")
+                                        .font(.caption)
+                                    Spacer()
+                                    Button(
+                                        action:{
+                                            showAddressSheet=true
+                                        },
+                                        label: {
+                                            Image(systemName: "pencil")
+                                                .font(.title3)
+                                                .foregroundColor(.white)
+                                                .padding(8)
+                                                .background(
+                                                    Circle().fill(Color(.primary))
+                                                )
                                         }
-                                }.foregroundColor(.white)
-                                    .padding(5)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .fill(Color(.primary))
-                                    )
-                            )
-                        }
-                        itemView(image: .clothes01, number: 1, desc: "Lorem ipsum dolor sit amet consectetur.", price: 17.00)
-                        itemView(image: .clothes02, number: 1, desc: "Lorem ipsum dolor sit amet consectetur.", price: 17.00)
-                        Text("Shipping Options")
-                            .font(.title)
-                            .bold()
-                        ShippingOptionsView(optionId: 0, optionType: "Standard", optionTime: "5-7 days",optionPrice: "Free",selectedOption: $selectedOption)
-                        ShippingOptionsView(optionId: 1, optionType: "Express", optionTime: "1-2 days", optionPrice: "$12.00",selectedOption: $selectedOption)
-                        Text("Payment Method")
-                            .font(.title)
-                            .bold()
-                        Text("Card")
-                            .foregroundColor(Color(.primary))
-                            .padding(10)
-                            .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(Color(hex:"E5EBFC"))
-                            )
-                    }
-                }
-                .scrollIndicators(.hidden)
-                HStack{
-                    Text("Total")
-                        .fontWeight(.heavy)
-                    Text("$34.00")
-                    Spacer()
-                    Button(
-                        action: {
-                        },
-                        label: {
-                            Text("Pay")
-                                .foregroundColor(.white)
-                                .padding(.horizontal,40)
-                                .padding(.vertical,10)
+                                    ).sheet(isPresented: $showAddressSheet, content: {
+                                        EditAddressView(showAddressSheet: $showAddressSheet)
+                                            .presentationDetents([.medium])
+                                    })
+                                }
+                            }
+                            .padding(15)
+                            .background(RoundedRectangle(cornerRadius: 10).fill(Color(hex:"F9F9F9")))
+                            VStack(alignment:.leading){
+                                Text("Contact Information")
+                                    .font(.title3)
+                                    .bold()
+                                HStack{
+                                    Text("+84932000000\namandamorgan@example.com")
+                                        .font(.caption)
+                                    Spacer()
+                                    Button(
+                                        action:{
+                                            showContactInfoSheet=true
+                                        },
+                                        label: {
+                                            Image(systemName: "pencil")
+                                                .font(.title3)
+                                                .foregroundColor(.white)
+                                                .padding(8)
+                                                .background(
+                                                    Circle().fill(Color(.primary))
+                                                )
+                                        }
+                                    ).sheet(isPresented: $showContactInfoSheet, content: {
+                                        EditContactInfoView(showContactInfoSheet: $showContactInfoSheet)
+                                            .presentationDetents([.medium])
+                                    })
+                                }
+                            }
+                            .padding(15)
+                            .background(RoundedRectangle(cornerRadius: 10).fill(Color(hex:"F9F9F9")))
+                            HStack{
+                                Text("Items")
+                                    .font(.title)
+                                    .bold()
+                                Text("2")
+                                    .font(.title2)
+                                    .bold()
+                                    .padding(10)
+                                    .background(Circle().fill(Color(hex:"E5EBFC")))
+                                Spacer()
+                                selectedVoucher==nil
+                                ?AnyView(
+                                    Button(
+                                        action:{
+                                            showVoucherSheet=true
+                                        },
+                                        label:{
+                                            Text("Add Voucher")
+                                                .foregroundColor(Color(.primary))
+                                                .font(.callout)
+                                                .padding(.horizontal,10)
+                                                .padding(.vertical,5)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 10)
+                                                        .fill(.white)
+                                                        .stroke(Color(.primary))
+                                                )
+                                        }
+                                    ).sheet(isPresented: $showVoucherSheet, content: {
+                                        AddVoucherView(
+                                            selectedVoucher: $selectedVoucher,
+                                            showVoucher: $showVoucherSheet
+                                        ).presentationDetents([.medium])
+                                    })
+                                )
+                                :AnyView(
+                                    HStack{
+                                        Text("\(selectedVoucher!.discount) Discount")
+                                        Image(systemName: "xmark")
+                                            .onTapGesture {
+                                                selectedVoucher=nil
+                                            }
+                                    }.foregroundColor(.white)
+                                        .padding(5)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .fill(Color(.primary))
+                                        )
+                                )
+                            }
+                            itemView(image: .clothes01, number: 1, desc: "Lorem ipsum dolor sit amet consectetur.", price: 17.00)
+                            itemView(image: .clothes02, number: 1, desc: "Lorem ipsum dolor sit amet consectetur.", price: 17.00)
+                            Text("Shipping Options")
+                                .font(.title)
+                                .bold()
+                            ShippingOptionsView(optionId: 0, optionType: "Standard", optionTime: "5-7 days",optionPrice: "Free",selectedOption: $selectedOption)
+                            ShippingOptionsView(optionId: 1, optionType: "Express", optionTime: "1-2 days", optionPrice: "$12.00",selectedOption: $selectedOption)
+                            Text("Payment Method")
+                                .font(.title)
+                                .bold()
+                            Text("Card")
+                                .foregroundColor(Color(.primary))
+                                .padding(10)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color.black)
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color(hex:"E5EBFC"))
                                 )
                         }
-                    )
+                    }
+                    .scrollIndicators(.hidden)
+                    HStack{
+                        Text("Total")
+                            .fontWeight(.heavy)
+                        Text("$34.00")
+                        Spacer()
+                        Button(
+                            action: {
+                                isPlaying=true
+                                DispatchQueue.main.asyncAfter(deadline: .now()+3){
+                                    payStatus=PayStatus.success
+                                }
+                            },
+                            label: {
+                                Text("Pay")
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal,40)
+                                    .padding(.vertical,10)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(Color.black)
+                                    )
+                            }
+                        )
+                    }
+                }
+                .padding(.horizontal,10)
+                .blur(radius: showVoucherSheet||showAddressSheet||showContactInfoSheet || isPlaying ? 8 : 0)
+                if isPlaying {
+                    PayLoadingView(status: $payStatus)
                 }
             }
-            .padding(.horizontal,10)
-            .blur(radius: addVoucher ? 8 : 0)
         }
     }
     
